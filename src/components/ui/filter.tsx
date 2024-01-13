@@ -1,6 +1,6 @@
 'use client';
 import { useState, ChangeEvent } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { addDays } from 'date-fns';
 import { DateRange, SelectRangeEventHandler } from 'react-day-picker';
 
@@ -25,6 +25,7 @@ import { SORT_BY, SORT_FOR, CURRENT_DATE } from '@/utils/defaults';
 import { cn } from '@/lib/utils';
 
 interface FilterProps {
+  firstRender: boolean;
   search: string;
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void;
   sortByValue: string;
@@ -37,6 +38,7 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = (props) => {
   const {
+    firstRender,
     search,
     onSearch,
     sortByValue,
@@ -46,18 +48,14 @@ const Filter: React.FC<FilterProps> = (props) => {
     dateRange,
     onDateRange,
   } = props;
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
-  });
 
   const selectedSortFor = SORT_FOR.find(
     (option) => option.value === sortForValue
   )?.name;
 
   return (
-    <div className='grid grid-cols-2 gap-3'>
-      <div className='relative'>
+    <div className='grid grid-cols-3 gap-3'>
+      <div className='relative col-span-2'>
         <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
         <Input
           placeholder='Search'
@@ -66,14 +64,18 @@ const Filter: React.FC<FilterProps> = (props) => {
           value={search}
         />
       </div>
-      <div className='grid grid-cols-3 gap-3'>
+      <div className='grid grid-cols-2 gap-3'>
         <Select
           defaultValue={SORT_BY[0].value}
           onValueChange={onSortBy}
           value={sortByValue}
         >
           <SelectTrigger>
-            <SelectValue />
+            {firstRender ? (
+              <Loader2 className='h-4 w-4 animate-spin m-auto' />
+            ) : (
+              <SelectValue />
+            )}
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
@@ -91,12 +93,11 @@ const Filter: React.FC<FilterProps> = (props) => {
           <PopoverTrigger asChild>
             <Button
               variant={'outline'}
-              className={cn(
-                'w-[240px] justify-start text-left font-normal',
-                !date && 'text-muted-foreground'
-              )}
+              className='justify-start text-left font-normal'
             >
-              {selectedSortFor ? (
+              {firstRender ? (
+                <Loader2 className='h-4 w-4 animate-spin m-auto' />
+              ) : selectedSortFor ? (
                 <span>{selectedSortFor}</span>
               ) : (
                 <span>Custom</span>
