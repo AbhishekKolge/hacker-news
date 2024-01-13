@@ -3,14 +3,13 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { SelectRangeEventHandler } from 'react-day-picker';
 
 import {
-  PAGE,
-  TAG,
   SORT_BY,
   SORT_FOR,
   DAY,
   WEEK,
   MONTH,
   YEAR,
+  NEWS_FILTER,
 } from '@/utils/defaults';
 import { pickExactObjKeys } from '@/utils/helper';
 
@@ -23,12 +22,7 @@ import {
   HelperAction,
 } from './types';
 
-const initialFilterState: FilterState = {
-  query: '',
-  page: PAGE,
-  tags: TAG,
-  numericFilters: '',
-};
+const initialFilterState: FilterState = NEWS_FILTER;
 
 const initialHelperState: HelperState = {
   query: '',
@@ -278,8 +272,8 @@ const useFilters = () => {
 
   useEffect(() => {
     if (helperState.firstRender) {
-      let queryParamsFilter = JSON.parse(searchParams.get('filter') ?? '{}');
-      let helperParamsState = JSON.parse(searchParams.get('state') ?? '{}');
+      const queryParamsFilter = JSON.parse(searchParams.get('filter') ?? '{}');
+      const helperParamsState = JSON.parse(searchParams.get('state') ?? '{}');
 
       const filters: FilterState = pickExactObjKeys(
         queryParamsFilter,
