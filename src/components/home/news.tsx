@@ -1,13 +1,14 @@
 'use client';
 import Filter from '@/components/ui/filter';
+import Pagination from '../ui/pagination';
 import NewsCard from './news-card';
 
 import useFilters from '@/hooks/useFilter';
 
 import { NewsResult } from '@/app/types';
 
-const NewsList: React.FC<NewsResult> = (props) => {
-  const { page, totalPages, results } = props;
+const News: React.FC<NewsResult> = (props) => {
+  const { totalPages, page, results } = props;
   const {
     queryFilterState,
     helperState,
@@ -44,8 +45,16 @@ const NewsList: React.FC<NewsResult> = (props) => {
       {results.map((news) => {
         return <NewsCard key={news.id} {...news} />;
       })}
+      {totalPages && (
+        <Pagination
+          onNext={nextPageHandler}
+          onPrev={prevPageHandler}
+          totalPages={totalPages}
+          currentPage={queryFilterState.page + 1}
+        />
+      )}
     </>
   );
 };
 
-export default NewsList;
+export default News;
