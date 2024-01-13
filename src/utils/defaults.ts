@@ -85,6 +85,13 @@ const YEAR = new Date(
   0
 ).getTime();
 
+const NEWS_FILTER = {
+  query: '',
+  page: PAGE,
+  tags: TAG,
+  numericFilters: '',
+};
+
 export {
   SORT_BY,
   SORT_FOR,
@@ -98,4 +105,5 @@ export {
   MONTH,
   YEAR,
   CURRENT_DATE,
+  NEWS_FILTER,
 };
