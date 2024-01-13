@@ -57,7 +57,7 @@ const Home = async (props: PageProps) => {
   const data = await getNews({ queryFilter, sortBy });
 
   return (
-    <section className='h-full grid'>
+    <section className='h-full grid gap-6'>
       <NewsList {...data} />
     </section>
   );
