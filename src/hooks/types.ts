@@ -11,6 +11,7 @@ export interface HelperState {
   dateTo: number | null;
   sorBy: string;
   sortFor: string | null;
+  firstRender: boolean;
 }
 
 interface SetFiltersAction {
@@ -56,6 +57,11 @@ interface SetHelperAction {
   helpers: HelperState;
 }
 
+interface SetFirstRenderAction {
+  type: 'SET_FIRST_RENDER';
+  status: boolean;
+}
+
 export type QueryFilterAction =
   | SetFiltersAction
   | ChangePageAction
@@ -67,4 +73,5 @@ export type HelperAction =
   | SetQueryAction
   | SetSortByAction
   | SetSortForAction
-  | SetHelperAction;
+  | SetHelperAction
+  | SetFirstRenderAction;

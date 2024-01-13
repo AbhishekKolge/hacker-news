@@ -22,6 +22,8 @@ const Home = () => {
     to: helperState.dateTo ? new Date(helperState.dateTo) : undefined,
   };
 
+  console.log(queryFilterState, helperState);
+
   return (
     <section className='h-full grid'>
       <Filter

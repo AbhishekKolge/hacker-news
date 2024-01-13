@@ -1,12 +1,6 @@
-import {
-  useReducer,
-  useCallback,
-  useEffect,
-  Reducer,
-  ChangeEvent,
-} from 'react';
+import { useReducer, useEffect, Reducer, ChangeEvent } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { DateRange, SelectRangeEventHandler } from 'react-day-picker';
+import { SelectRangeEventHandler } from 'react-day-picker';
 
 import {
   PAGE,
@@ -18,6 +12,7 @@ import {
   MONTH,
   YEAR,
 } from '@/utils/defaults';
+import { pickExactObjKeys } from '@/utils/helper';
 
 import { useDebouncedCallback } from './useOptmization';
 
@@ -41,6 +36,7 @@ const initialHelperState: HelperState = {
   dateTo: null,
   sorBy: SORT_BY[0].value,
   sortFor: SORT_FOR[0].value,
+  firstRender: true,
 };
 
 const queryFilterReducer: Reducer<FilterState, QueryFilterAction> = (
@@ -77,6 +73,12 @@ const queryFilterReducer: Reducer<FilterState, QueryFilterAction> = (
 };
 
 const helperReducer: Reducer<HelperState, HelperAction> = (state, action) => {
+  if (action.type === 'SET_FIRST_RENDER') {
+    return {
+      ...state,
+      firstRender: action.status,
+    };
+  }
   if (action.type === 'SET_HELPERS') {
     return {
       ...state,
@@ -267,6 +269,52 @@ const useFilters = () => {
       numericFilters: numericFilters.join(','),
     });
   };
+
+  const buildQueryParamHandler = (name: string, value: string) => {
+    const params = new URLSearchParams();
+    params.set(name, value);
+    return params.toString();
+  };
+
+  useEffect(() => {
+    if (helperState.firstRender) {
+      let queryParamsFilter = JSON.parse(searchParams.get('filter') ?? '{}');
+      let helperParamsState = JSON.parse(searchParams.get('state') ?? '{}');
+
+      const filters: FilterState = pickExactObjKeys(
+        queryParamsFilter,
+        Object.keys(queryFilterState) as (keyof FilterState)[]
+      ) as FilterState;
+
+      const helpers: HelperState = pickExactObjKeys(
+        helperParamsState,
+        Object.keys(helperState) as (keyof HelperState)[]
+      ) as HelperState;
+
+      dispatchQueryFilter({
+        type: 'SET_FILTERS',
+        filters,
+      });
+      dispatchHelper({ type: 'SET_HELPERS', helpers });
+      dispatchHelper({ type: 'SET_FIRST_RENDER', status: false });
+    }
+  }, [helperState.firstRender, searchParams, queryFilterState, helperState]);
+
+  useEffect(() => {
+    if (!helperState.firstRender) {
+      const updatedQuery = buildQueryParamHandler(
+        'filter',
+        JSON.stringify(queryFilterState)
+      );
+
+      const updatedState = buildQueryParamHandler(
+        'state',
+        JSON.stringify(helperState)
+      );
+
+      router.replace(`${pathname}?${updatedQuery}&${updatedState}`);
+    }
+  }, [helperState, queryFilterState, pathname, router]);
 
   return {
     queryFilterState,
