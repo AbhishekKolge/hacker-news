@@ -1,6 +1,5 @@
 'use client';
 import { Ban } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 
@@ -10,10 +9,11 @@ interface ErrorProps {
 
 const Error: React.FC<ErrorProps> = (props) => {
   const { error } = props;
-  const router = useRouter();
+
+  console.error(error.message);
 
   const onRefresh = () => {
-    router.refresh();
+    window.location.href = '/';
   };
 
   return (
@@ -22,13 +22,13 @@ const Error: React.FC<ErrorProps> = (props) => {
         <Ban className='m-auto w-[100px] h-[100px] text-red-500' />
 
         <p className='text-3xl tracking-tight font-bold text-gray-900'>
-          {error?.message || `Something's went wrong`}
+          Something went wrong
         </p>
         <p className='text-lg font-light text-gray-500'>
           {`Sorry, we couldn't fetch the data. You'll find lots to explore on the
-            home page or you can retry fetching the data.`}
+            home page.`}
         </p>
-        <Button onClick={onRefresh}>Retry</Button>
+        <Button onClick={onRefresh}>Go to Home</Button>
       </div>
     </section>
   );
