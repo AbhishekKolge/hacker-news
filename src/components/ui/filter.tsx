@@ -34,6 +34,7 @@ interface FilterProps {
   onSortFor: (value: string) => void;
   dateRange: DateRange;
   onDateRange: SelectRangeEventHandler;
+  onClear: () => void;
 }
 
 const Filter: React.FC<FilterProps> = (props) => {
@@ -47,6 +48,7 @@ const Filter: React.FC<FilterProps> = (props) => {
     onSortFor,
     dateRange,
     onDateRange,
+    onClear,
   } = props;
 
   const selectedSortFor = SORT_FOR.find(
@@ -54,8 +56,8 @@ const Filter: React.FC<FilterProps> = (props) => {
   )?.name;
 
   return (
-    <div className='grid grid-cols-3 gap-3'>
-      <div className='relative col-span-2'>
+    <div className='grid lg:grid-cols-3 gap-3'>
+      <div className='relative lg:col-span-2'>
         <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
         <Input
           placeholder='Search'
@@ -64,7 +66,7 @@ const Filter: React.FC<FilterProps> = (props) => {
           value={search}
         />
       </div>
-      <div className='grid grid-cols-2 gap-3'>
+      <div className='grid sm:grid-cols-3 gap-3'>
         <Select
           defaultValue={SORT_BY[0].value}
           onValueChange={onSortBy}
@@ -136,6 +138,7 @@ const Filter: React.FC<FilterProps> = (props) => {
             </div>
           </PopoverContent>
         </Popover>
+        <Button onClick={onClear}>Clear</Button>
       </div>
     </div>
   );

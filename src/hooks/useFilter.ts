@@ -63,6 +63,9 @@ const queryFilterReducer: Reducer<FilterState, QueryFilterAction> = (
       numericFilters: action.numericFilters,
     };
   }
+  if (action.type === 'CLEAR') {
+    return initialFilterState;
+  }
   return initialFilterState;
 };
 
@@ -105,6 +108,9 @@ const helperReducer: Reducer<HelperState, HelperAction> = (state, action) => {
       dateTo: action.dateTo || null,
       sortFor: action.sortFor,
     };
+  }
+  if (action.type === 'CLEAR') {
+    return { ...initialHelperState, firstRender: false };
   }
   return initialHelperState;
 };
@@ -266,6 +272,15 @@ const useFilters = () => {
     });
   };
 
+  const clearFilterHandler = () => {
+    dispatchQueryFilter({
+      type: 'CLEAR',
+    });
+    dispatchHelper({
+      type: 'CLEAR',
+    });
+  };
+
   const buildQueryParamHandler = (name: string, value: string) => {
     const params = new URLSearchParams();
     params.set(name, value);
@@ -322,6 +337,7 @@ const useFilters = () => {
       sortByHandler,
       sortForHandler,
       customDateRangeHandler,
+      clearFilterHandler,
     },
   };
 };

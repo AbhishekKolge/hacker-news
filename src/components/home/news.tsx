@@ -19,6 +19,7 @@ const News: React.FC<NewsResult> = (props) => {
       sortByHandler,
       sortForHandler,
       customDateRangeHandler,
+      clearFilterHandler,
     },
   } = useFilters();
 
@@ -41,6 +42,7 @@ const News: React.FC<NewsResult> = (props) => {
         onSortFor={sortForHandler}
         dateRange={dateRange}
         onDateRange={customDateRangeHandler}
+        onClear={clearFilterHandler}
       />
       {results.map((news) => {
         return <NewsCard key={news.id} {...news} />;

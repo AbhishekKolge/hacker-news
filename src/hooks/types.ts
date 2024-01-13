@@ -62,11 +62,16 @@ interface SetFirstRenderAction {
   status: boolean;
 }
 
+interface ClearAction {
+  type: 'CLEAR';
+}
+
 export type QueryFilterAction =
   | SetFiltersAction
   | ChangePageAction
   | SetQueryAction
-  | SetNumericFiltersAction;
+  | SetNumericFiltersAction
+  | ClearAction;
 
 export type HelperAction =
   | SetRangeAction
@@ -74,4 +79,5 @@ export type HelperAction =
   | SetSortByAction
   | SetSortForAction
   | SetHelperAction
-  | SetFirstRenderAction;
+  | SetFirstRenderAction
+  | ClearAction;
