@@ -166,7 +166,7 @@ const useFilters = () => {
         break;
       }
       case 'day': {
-        const dateFrom = Date.now() - DAY;
+        const dateFrom = ~~((Date.now() - DAY) / 1000);
         dispatchHelper({
           type: 'SET_SORT_FOR',
           sortFor: value,
@@ -180,7 +180,7 @@ const useFilters = () => {
         break;
       }
       case 'week': {
-        const dateFrom = Date.now() - WEEK;
+        const dateFrom = ~~((Date.now() - WEEK) / 1000);
         dispatchHelper({
           type: 'SET_SORT_FOR',
           sortFor: value,
@@ -194,7 +194,7 @@ const useFilters = () => {
         break;
       }
       case 'month': {
-        const dateFrom = MONTH;
+        const dateFrom = ~~(MONTH / 1000);
         dispatchHelper({
           type: 'SET_SORT_FOR',
           sortFor: value,
@@ -208,7 +208,7 @@ const useFilters = () => {
         break;
       }
       case 'year': {
-        const dateFrom = YEAR;
+        const dateFrom = ~~(YEAR / 1000);
         dispatchHelper({
           type: 'SET_SORT_FOR',
           sortFor: value,
@@ -238,8 +238,10 @@ const useFilters = () => {
   };
 
   const customDateRangeHandler: SelectRangeEventHandler = (value) => {
-    const dateFrom = value?.from ? new Date(value.from).getTime() : null;
-    const dateTo = value?.to ? new Date(value.to).getTime() : null;
+    const dateFrom = value?.from
+      ? ~~(new Date(value.from).getTime() / 1000)
+      : null;
+    const dateTo = value?.to ? ~~(new Date(value.to).getTime() / 1000) : null;
 
     let numericFilters: string[] = [];
 
