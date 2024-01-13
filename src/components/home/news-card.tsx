@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { UserRound, Heart, MessageSquare } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,13 +9,25 @@ import { NewsItem } from '@/app/types';
 
 const NewsCard: React.FC<NewsItem> = (props) => {
   const { id, title, author, url, points, totalComments } = props;
+  const searchParams = useSearchParams();
+
+  const queryParams = {
+    filter: searchParams.get('filter'),
+    state: searchParams.get('state'),
+  };
+
   return (
     <Card className='flex gap-6 p-6'>
       <CardHeader className='p-0'>
         <NewsImage id={id} author={author} />
       </CardHeader>
       <CardContent className='grid gap-3 p-0'>
-        <Link href={`/${id}`}>
+        <Link
+          href={{
+            pathname: `/${id}`,
+            query: queryParams,
+          }}
+        >
           <CardTitle>{title}</CardTitle>
         </Link>
         <div className='flex items-center gap-3'>
