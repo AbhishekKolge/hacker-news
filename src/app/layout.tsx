@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import { Toaster } from '@/components/ui/sonner';
-
 import Nav from '@/components/ui/nav';
 
-import Provider from '@/state/provider';
+import ThemeProvider from '@/state/theme-provider';
+import QueryProvider from '@/state/query-provider';
 
 import './globals.css';
 
@@ -23,14 +22,23 @@ interface RootLayoutProps {
 const RootLayout: React.FC<RootLayoutProps> = (props) => {
   const { children } = props;
   return (
-    <Provider>
+    <QueryProvider>
       <html lang='en'>
         <body className={`${inter.className} relative min-h-screen`}>
-          <Nav />
-          <main className='w-screen min-h-screen pt-28 h-auto'>{children}</main>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Nav />
+            <main className='w-screen min-h-screen pt-28 h-auto'>
+              {children}
+            </main>
+          </ThemeProvider>
         </body>
       </html>
-    </Provider>
+    </QueryProvider>
   );
 };
 
