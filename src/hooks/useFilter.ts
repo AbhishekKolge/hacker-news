@@ -1,0 +1,285 @@
+import {
+  useReducer,
+  useCallback,
+  useEffect,
+  Reducer,
+  ChangeEvent,
+} from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { DateRange, SelectRangeEventHandler } from 'react-day-picker';
+
+import {
+  PAGE,
+  TAG,
+  SORT_BY,
+  SORT_FOR,
+  DAY,
+  WEEK,
+  MONTH,
+  YEAR,
+} from '@/utils/defaults';
+
+import { useDebouncedCallback } from './useOptmization';
+
+import {
+  FilterState,
+  HelperState,
+  QueryFilterAction,
+  HelperAction,
+} from './types';
+
+const initialFilterState: FilterState = {
+  query: '',
+  page: PAGE,
+  tags: TAG,
+  numericFilters: '',
+};
+
+const initialHelperState: HelperState = {
+  query: '',
+  dateFrom: null,
+  dateTo: null,
+  sorBy: SORT_BY[0].value,
+  sortFor: SORT_FOR[0].value,
+};
+
+const queryFilterReducer: Reducer<FilterState, QueryFilterAction> = (
+  state,
+  action
+) => {
+  if (action.type === 'SET_FILTERS') {
+    return {
+      ...state,
+      ...action.filters,
+    };
+  }
+  if (action.type === 'CHANGE_PAGE') {
+    return {
+      ...state,
+      page: action.page,
+    };
+  }
+  if (action.type === 'SET_QUERY') {
+    return {
+      ...state,
+      page: initialFilterState.page,
+      query: action.query,
+    };
+  }
+  if (action.type === 'SET_NUMERIC_FILTERS') {
+    return {
+      ...state,
+      page: initialFilterState.page,
+      numericFilters: action.numericFilters,
+    };
+  }
+  return initialFilterState;
+};
+
+const helperReducer: Reducer<HelperState, HelperAction> = (state, action) => {
+  if (action.type === 'SET_HELPERS') {
+    return {
+      ...state,
+      ...action.helpers,
+    };
+  }
+  if (action.type === 'SET_QUERY') {
+    return {
+      ...state,
+      query: action.query,
+    };
+  }
+  if (action.type === 'SET_RANGE') {
+    return {
+      ...state,
+      dateFrom: action.dateFrom,
+      dateTo: action.dateTo,
+    };
+  }
+  if (action.type === 'SET_SORT_BY') {
+    return {
+      ...state,
+      sorBy: action.sorBy,
+    };
+  }
+  if (action.type === 'SET_SORT_FOR') {
+    return {
+      ...state,
+      dateFrom: action.dateFrom || null,
+      dateTo: action.dateTo || null,
+      sortFor: action.sortFor,
+    };
+  }
+  return initialHelperState;
+};
+
+const useFilters = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [queryFilterState, dispatchQueryFilter] = useReducer(
+    queryFilterReducer,
+    initialFilterState
+  );
+  const [helperState, dispatchHelper] = useReducer(
+    helperReducer,
+    initialHelperState
+  );
+
+  const nextPageHandler = () => {
+    dispatchQueryFilter({
+      type: 'CHANGE_PAGE',
+      page: queryFilterState.page + 1,
+    });
+  };
+
+  const prevPageHandler = () => {
+    dispatchQueryFilter({
+      type: 'CHANGE_PAGE',
+      page: queryFilterState.page - 1,
+    });
+  };
+
+  const debouncedHandleSearch = useDebouncedCallback((query: string) => {
+    dispatchQueryFilter({ type: 'SET_QUERY', query });
+  });
+
+  const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    dispatchHelper({ type: 'SET_QUERY', query });
+    debouncedHandleSearch(query);
+  };
+
+  const sortByHandler = (sorBy: string) => {
+    dispatchHelper({ type: 'SET_SORT_BY', sorBy });
+  };
+
+  const sortForHandler = (value: string) => {
+    switch (value) {
+      case 'all': {
+        dispatchHelper({
+          type: 'SET_SORT_FOR',
+          sortFor: value,
+          dateFrom: null,
+          dateTo: null,
+        });
+        dispatchQueryFilter({
+          type: 'SET_NUMERIC_FILTERS',
+          numericFilters: '',
+        });
+        break;
+      }
+      case 'day': {
+        const dateFrom = Date.now() - DAY;
+        dispatchHelper({
+          type: 'SET_SORT_FOR',
+          sortFor: value,
+          dateFrom,
+          dateTo: null,
+        });
+        dispatchQueryFilter({
+          type: 'SET_NUMERIC_FILTERS',
+          numericFilters: `created_at_i>${dateFrom}`,
+        });
+        break;
+      }
+      case 'week': {
+        const dateFrom = Date.now() - WEEK;
+        dispatchHelper({
+          type: 'SET_SORT_FOR',
+          sortFor: value,
+          dateFrom,
+          dateTo: null,
+        });
+        dispatchQueryFilter({
+          type: 'SET_NUMERIC_FILTERS',
+          numericFilters: `created_at_i>${dateFrom}`,
+        });
+        break;
+      }
+      case 'month': {
+        const dateFrom = MONTH;
+        dispatchHelper({
+          type: 'SET_SORT_FOR',
+          sortFor: value,
+          dateFrom,
+          dateTo: null,
+        });
+        dispatchQueryFilter({
+          type: 'SET_NUMERIC_FILTERS',
+          numericFilters: `created_at_i>${dateFrom}`,
+        });
+        break;
+      }
+      case 'year': {
+        const dateFrom = YEAR;
+        dispatchHelper({
+          type: 'SET_SORT_FOR',
+          sortFor: value,
+          dateFrom,
+          dateTo: null,
+        });
+        dispatchQueryFilter({
+          type: 'SET_NUMERIC_FILTERS',
+          numericFilters: `created_at_i>${dateFrom}`,
+        });
+        break;
+      }
+      default: {
+        dispatchHelper({
+          type: 'SET_SORT_FOR',
+          sortFor: value,
+          dateFrom: null,
+          dateTo: null,
+        });
+        dispatchQueryFilter({
+          type: 'SET_NUMERIC_FILTERS',
+          numericFilters: '',
+        });
+        break;
+      }
+    }
+  };
+
+  const customDateRangeHandler: SelectRangeEventHandler = (value) => {
+    const dateFrom = value?.from ? new Date(value.from).getTime() : null;
+    const dateTo = value?.to ? new Date(value.to).getTime() : null;
+
+    let numericFilters: string[] = [];
+
+    if (dateFrom) {
+      numericFilters.push(`created_at_i>${dateFrom}`);
+    }
+
+    if (dateTo) {
+      numericFilters.push(`created_at_i<${dateTo}`);
+    }
+
+    dispatchHelper({
+      type: 'SET_SORT_FOR',
+      sortFor: null,
+      dateFrom,
+      dateTo,
+    });
+
+    dispatchQueryFilter({
+      type: 'SET_NUMERIC_FILTERS',
+      numericFilters: numericFilters.join(','),
+    });
+  };
+
+  return {
+    queryFilterState,
+    helperState,
+    methods: {
+      nextPageHandler,
+      prevPageHandler,
+      searchHandler,
+      sortByHandler,
+      sortForHandler,
+      customDateRangeHandler,
+    },
+  };
+};
+
+export default useFilters;
