@@ -1,22 +1,16 @@
-import NewsList from '@/components/home/news-list';
+import { NewsItem, NewsResult, ApiResponse } from './types';
 
-import { SORT_BY, NEWS_FILTER } from '@/utils/defaults';
+import News from '@/components/home/news';
 
-import {
-  GetNewsParams,
-  NewsItem,
-  NewsResult,
-  ApiResponse,
-  PageProps,
-} from './types';
+import { NEWS_FILTER } from '@/utils/defaults';
 
-const getNews = async ({
-  queryFilter,
-  sortBy,
-}: GetNewsParams): Promise<NewsResult> => {
+const getNews = async (): Promise<NewsResult> => {
   try {
-    const queryParams = new URLSearchParams(queryFilter);
-    const res = await fetch(`${process.env.BASE_URL}/${sortBy}?${queryParams}`);
+    const queryParams = new URLSearchParams({
+      ...NEWS_FILTER,
+      page: String(NEWS_FILTER.page),
+    });
+    const res = await fetch(`${process.env.BASE_URL}/search?${queryParams}`);
     if (!res.ok) {
       throw new Error('Failed to fetch news');
     }
@@ -45,20 +39,12 @@ const getNews = async ({
   }
 };
 
-const Home = async (props: PageProps) => {
-  const { searchParams } = props;
-  const queryFilter = searchParams.filter
-    ? JSON.parse(searchParams.filter)
-    : NEWS_FILTER;
-  const sortBy = searchParams.state
-    ? JSON.parse(searchParams.state).sorBy
-    : SORT_BY[0].value;
-
-  const data = await getNews({ queryFilter, sortBy });
+const Home = async () => {
+  const data = await getNews();
 
   return (
     <section className='h-full grid gap-6'>
-      <NewsList {...data} />
+      <News {...data} />
     </section>
   );
 };
