@@ -22,14 +22,16 @@ const NewsCard: React.FC<NewsItem> = (props) => {
         <NewsImage id={id} author={author} />
       </CardHeader>
       <CardContent className='grid gap-3 p-0'>
-        <Link
-          href={{
-            pathname: `/${id}`,
-            query: queryParams,
-          }}
-        >
-          <CardTitle>{title}</CardTitle>
-        </Link>
+        <CardTitle>
+          <Link
+            href={{
+              pathname: `/${id}`,
+              query: queryParams,
+            }}
+          >
+            {title}
+          </Link>
+        </CardTitle>
         <div className='flex items-center gap-3'>
           <div className='flex items-center gap-2'>
             <Heart size={14} />
