@@ -37,7 +37,7 @@ const NewsCard: React.FC<NewsItem> = (props) => {
             target='_blank'
             className='block text-xs text-sky-600'
           >
-            {url}
+            {new URL(url).origin}
           </Link>
         )}
       </CardContent>
