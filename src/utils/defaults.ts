@@ -92,6 +92,8 @@ const NEWS_FILTER = {
   numericFilters: '',
 };
 
+const LOADING_CARD_LENGTH = 10;
+
 export {
   SORT_BY,
   SORT_FOR,
@@ -106,4 +108,5 @@ export {
   YEAR,
   CURRENT_DATE,
   NEWS_FILTER,
+  LOADING_CARD_LENGTH,
 };
