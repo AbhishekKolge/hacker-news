@@ -1,4 +1,4 @@
-import { NewsItem, NewsResult, ApiResponse } from './types';
+import { NewsItem, NewsResult, NewsListApiResponse, PageProps } from './types';
 
 import News from '@/components/home/news';
 
@@ -14,7 +14,7 @@ const getNews = async (): Promise<NewsResult> => {
     if (!res.ok) {
       throw new Error('Failed to fetch news');
     }
-    const data: ApiResponse = await res.json();
+    const data: NewsListApiResponse = await res.json();
 
     const results = data.hits.map((news): NewsItem => {
       return {
@@ -24,6 +24,7 @@ const getNews = async (): Promise<NewsResult> => {
         url: news.url,
         points: news.points,
         totalComments: news.num_comments,
+        createdAt: news.created_at_i,
       };
     });
 
@@ -39,7 +40,7 @@ const getNews = async (): Promise<NewsResult> => {
   }
 };
 
-const Home = async () => {
+const Home: React.FC<PageProps> = async () => {
   const data = await getNews();
 
   return (
