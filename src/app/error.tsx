@@ -4,13 +4,11 @@ import { Ban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface ErrorProps {
-  error: Error;
+  error: Error | unknown;
 }
 
 const Error: React.FC<ErrorProps> = (props) => {
   const { error } = props;
-
-  console.error(error.message);
 
   const onRefresh = () => {
     window.location.href = '/';
