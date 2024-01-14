@@ -7,7 +7,7 @@ const CommentList: React.FC<{
 }> = (props) => {
   const { comments } = props;
   return (
-    <div className='grid gap-4'>
+    <div className='grid gap-4 w-full'>
       {comments.map((comment) => {
         return <Comment key={comment.id} {...comment} />;
       })}
