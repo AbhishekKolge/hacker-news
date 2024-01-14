@@ -92,7 +92,7 @@ const NEWS_FILTER = {
   numericFilters: '',
 };
 
-const LOADING_CARD_LENGTH = 10;
+const LOADING_CARD_LENGTH = 5;
 
 export {
   SORT_BY,
