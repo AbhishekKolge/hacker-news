@@ -44,7 +44,7 @@ const Comment: React.FC<NewsDetailsChildrenApiResponse> = (props) => {
     <>
       <Card>
         <CardHeader className='grid gap-3'>
-          <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-between gap-2 flex-wrap'>
             <CardTitle className='flex items-center gap-2'>
               <UserRound size={14} />
               {author}

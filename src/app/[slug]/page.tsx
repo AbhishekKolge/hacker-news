@@ -42,11 +42,11 @@ const Details: React.FC<PageProps> = async (props) => {
 
   return (
     <section className='h-full grid gap-10'>
-      <div className='flex items-center gap-6'>
+      <div className='flex flex-col items-start sm:flex-row sm:items-center gap-6'>
         <NewsImage id={data.id} author={data.author} />
         <div className='grid gap-2'>
           <h2 className='border-none p-0'>{data.title}</h2>
-          <div className='flex gap-3 items-center'>
+          <div className='flex gap-3 items-center flex-wrap'>
             <div className='flex items-center gap-2'>
               <Heart size={14} />
               <span className='font-normal text-xs'>{data.points}</span>

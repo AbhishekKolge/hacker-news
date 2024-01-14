@@ -34,7 +34,7 @@ const NewsCard: React.FC<NewsItem> = (props) => {
             {title}
           </Link>
         </CardTitle>
-        <div className='flex items-center gap-3'>
+        <div className='flex items-center gap-3 flex-wrap'>
           <div className='flex items-center gap-2'>
             <Heart size={14} />
             <span className='font-normal text-xs'>{points}</span>
