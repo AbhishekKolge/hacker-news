@@ -48,11 +48,12 @@ const News: React.FC<NewsResult> = (props) => {
     to: helperState.dateTo ? new Date(helperState.dateTo * 1000) : undefined,
   };
 
-  const newsData = isSuccess ? data.results : results;
-
   if (isError) {
     return <Error error={error} />;
   }
+
+  const newsData = isSuccess ? data.results : results;
+  const totalNewsPages = isSuccess ? data.totalPages : totalPages;
 
   return (
     <>
@@ -76,11 +77,11 @@ const News: React.FC<NewsResult> = (props) => {
           return <NewsCard key={news.id} {...news} />;
         })}
 
-      {totalPages && (
+      {newsData.length && totalNewsPages && (
         <Pagination
           onNext={nextPageHandler}
           onPrev={prevPageHandler}
-          totalPages={totalPages}
+          totalPages={totalNewsPages}
           currentPage={queryFilterState.page + 1}
         />
       )}
