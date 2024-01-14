@@ -77,7 +77,7 @@ const News: React.FC<NewsResult> = (props) => {
           return <NewsCard key={news.id} {...news} />;
         })}
 
-      {newsData.length && totalNewsPages && (
+      {!!newsData.length && !!totalNewsPages && (
         <Pagination
           onNext={nextPageHandler}
           onPrev={prevPageHandler}
