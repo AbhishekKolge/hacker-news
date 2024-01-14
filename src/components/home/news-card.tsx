@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { UserRound, Heart, MessageSquare } from 'lucide-react';
+import { UserRound, Heart, MessageSquare, Clock1 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import NewsImage from './news-image';
 
+import { formatSecondsToDate } from '@/utils/time';
+
 import { NewsItem } from '@/app/types';
 
 const NewsCard: React.FC<NewsItem> = (props) => {
-  const { id, title, author, url, points, totalComments } = props;
+  const { id, title, author, url, points, totalComments, createdAt } = props;
   const searchParams = useSearchParams();
 
   const queryParams = {
@@ -44,6 +46,12 @@ const NewsCard: React.FC<NewsItem> = (props) => {
           <div className='flex items-center gap-2'>
             <MessageSquare size={14} />
             <span className='font-normal text-xs'>{totalComments}</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <Clock1 size={14} />
+            <span className='font-normal text-xs'>
+              {formatSecondsToDate(createdAt)}
+            </span>
           </div>
         </div>
         {url && (
