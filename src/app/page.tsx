@@ -2,13 +2,14 @@ import { NewsItem, NewsResult, NewsListApiResponse, PageProps } from './types';
 
 import News from '@/components/home/news';
 
-import { NEWS_FILTER } from '@/utils/defaults';
+import { NEWS_FILTER, PAGE_SIZE } from '@/utils/defaults';
 
 const getNews = async (): Promise<NewsResult> => {
   try {
     const queryParams = new URLSearchParams({
       ...NEWS_FILTER,
       page: String(NEWS_FILTER.page),
+      hitsPerPage: String(PAGE_SIZE),
     });
     const res = await fetch(`${process.env.BASE_URL}/search?${queryParams}`);
     if (!res.ok) {

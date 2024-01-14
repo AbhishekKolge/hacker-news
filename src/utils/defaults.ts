@@ -45,7 +45,7 @@ const THROTTLE_TIME = 5000;
 
 const PAGE = 0;
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 const TAG = 'story';
 
