@@ -61,6 +61,7 @@ const Comment: React.FC<NewsDetailsChildrenApiResponse> = (props) => {
               <Skeleton className='w-[70%] h-4' />
             ) : (
               <CardDescription
+                className='break-nested'
                 dangerouslySetInnerHTML={{
                   __html: cleanText,
                 }}
