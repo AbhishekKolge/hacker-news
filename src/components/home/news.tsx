@@ -1,5 +1,5 @@
 'use client';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import Filter from '@/components/ui/filter';
 import Pagination from '../ui/pagination';
