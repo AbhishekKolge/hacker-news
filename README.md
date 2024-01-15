@@ -43,5 +43,5 @@ npm run build
 Run built application locally
 
 ```bash
-npm Start
+npm start
 ```
