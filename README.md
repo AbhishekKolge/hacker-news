@@ -1,6 +1,6 @@
-# Hacker News Clone Frontend using Next JS
+# Hacker News Clone using Next JS
 
-It is a clone of hacker news using https://hn.algolia.com APIs
+It is a clone of hacker news using https://hn.algolia.com/api APIs
 
 ## Demo
 
@@ -40,7 +40,7 @@ Build application for production
 npm run build
 ```
 
-Run build application Locally
+Run built application locally
 
 ```bash
 npm Start
